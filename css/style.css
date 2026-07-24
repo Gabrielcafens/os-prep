@@ -1,56 +1,61 @@
 :root {
-  --accent: #0969DA;
-  --accent-hover: #0552A5;
-  --accent-soft: #DDF1FF;
+  --accent: #4F46E5;
+  --accent-hover: #4338CA;
+  --accent-soft: #EEF2FF;
   --on-accent: #FFFFFF;
-  --red: #CF222E;
-  --red-dark: #A40E26;
-  --red-soft: #FFEBE9;
-  --green: #1A7A4A;
-  --green-soft: #E6F4EC;
-  --amber: #9A6700;
-  --amber-soft: #FFF8C5;
-  --ink: #1F2328;
-  --ink-mid: #57606A;
-  --ink-light: #6E7781;
-  --border: #D0D7DE;
+  --red: #DC2626;
+  --red-dark: #B91C1C;
+  --red-soft: #FEE2E2;
+  --green: #16A34A;
+  --green-soft: #DCFCE7;
+  --amber: #B45309;
+  --amber-soft: #FEF3C7;
+  --ink: #0F172A;
+  --ink-mid: #475569;
+  --ink-light: #64748B;
+  --border: #E2E8F0;
   --bg: #FFFFFF;
-  --sidebar-bg: #F6F8FA;
+  --sidebar-bg: #F8FAFC;
   --surface: #FFFFFF;
-  --reveal-bg: #1F2328;
-  --reveal-fg: #F0F3F6;
-  --radius: 16px;
-  --radius-sm: 12px;
-  --radius-pill: 999px;
-  --shadow: 0 1px 2px rgba(31,35,40,.06), 0 1px 8px rgba(31,35,40,.05);
-  --shadow-hover: 0 4px 10px rgba(31,35,40,.08), 0 10px 28px rgba(31,35,40,.10);
-  --elevation-1: 0 1px 3px rgba(11,87,208,.1), 0 1px 2px rgba(11,87,208,.08);
-  --elevation-2: 0 3px 6px rgba(11,87,208,.12), 0 4px 14px rgba(11,87,208,.10);
-  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  --sidebar-w: 220px;
-  --topbar-h: 60px;
+  --reveal-bg: #1E1B3A;
+  --reveal-fg: #EEF2FF;
+  /* Dimensions grounded on outsystems.com: ~6-8px button radius, 8-12px card radius, ~1200px content width */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(15,23,42,.06), 0 1px 8px rgba(15,23,42,.05);
+  --shadow-hover: 0 4px 10px rgba(15,23,42,.08), 0 10px 28px rgba(15,23,42,.10);
+  --elevation-1: 0 1px 3px rgba(79,70,229,.12), 0 1px 2px rgba(79,70,229,.08);
+  --elevation-2: 0 3px 6px rgba(79,70,229,.14), 0 4px 14px rgba(79,70,229,.12);
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --sidebar-w: 240px;
+  --topbar-h: 56px;
+  /* Bootstrap container breakpoints (lg/xl/xxl) */
+  --container-lg: 960px;
+  --container-xl: 1140px;
+  --container-xxl: 1320px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --accent: #388BFD;
-    --accent-hover: #58A6FF;
-    --accent-soft: rgba(56,139,253,.16);
+    --accent: #818CF8;
+    --accent-hover: #A5B4FC;
+    --accent-soft: rgba(129,140,248,.18);
     --on-accent: #FFFFFF;
-    --red: #FF7B72;
-    --red-dark: #FFA198;
-    --red-soft: rgba(248,81,73,.16);
-    --green: #3FB950;
-    --green-soft: rgba(63,185,80,.16);
-    --amber: #D29922;
-    --amber-soft: rgba(210,153,34,.16);
-    --ink: #E6EDF3;
-    --ink-mid: #9BA7B4;
-    --ink-light: #7D8590;
-    --border: #30363D;
-    --bg: #0D1117;
-    --sidebar-bg: #161B22;
-    --surface: #161B22;
+    --red: #F87171;
+    --red-dark: #FCA5A5;
+    --red-soft: rgba(248,113,113,.16);
+    --green: #4ADE80;
+    --green-soft: rgba(74,222,128,.16);
+    --amber: #FBBF24;
+    --amber-soft: rgba(251,191,36,.16);
+    --ink: #F1F5F9;
+    --ink-mid: #94A3B8;
+    --ink-light: #7C8798;
+    --border: #334155;
+    --bg: #0F172A;
+    --sidebar-bg: #1E293B;
+    --surface: #1E293B;
     --shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 8px rgba(0,0,0,.3);
     --shadow-hover: 0 4px 10px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.45);
     --elevation-1: 0 1px 3px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.3);
@@ -59,24 +64,24 @@
 }
 
 :root[data-theme="dark"] {
-  --accent: #388BFD;
-  --accent-hover: #58A6FF;
-  --accent-soft: rgba(56,139,253,.16);
+  --accent: #818CF8;
+  --accent-hover: #A5B4FC;
+  --accent-soft: rgba(129,140,248,.18);
   --on-accent: #FFFFFF;
-  --red: #FF7B72;
-  --red-dark: #FFA198;
-  --red-soft: rgba(248,81,73,.16);
-  --green: #3FB950;
-  --green-soft: rgba(63,185,80,.16);
-  --amber: #D29922;
-  --amber-soft: rgba(210,153,34,.16);
-  --ink: #E6EDF3;
-  --ink-mid: #9BA7B4;
-  --ink-light: #7D8590;
-  --border: #30363D;
-  --bg: #0D1117;
-  --sidebar-bg: #161B22;
-  --surface: #161B22;
+  --red: #F87171;
+  --red-dark: #FCA5A5;
+  --red-soft: rgba(248,113,113,.16);
+  --green: #4ADE80;
+  --green-soft: rgba(74,222,128,.16);
+  --amber: #FBBF24;
+  --amber-soft: rgba(251,191,36,.16);
+  --ink: #F1F5F9;
+  --ink-mid: #94A3B8;
+  --ink-light: #7C8798;
+  --border: #334155;
+  --bg: #0F172A;
+  --sidebar-bg: #1E293B;
+  --surface: #1E293B;
   --shadow: 0 1px 2px rgba(0,0,0,.4), 0 1px 8px rgba(0,0,0,.3);
   --shadow-hover: 0 4px 10px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.45);
   --elevation-1: 0 1px 3px rgba(0,0,0,.4), 0 1px 2px rgba(0,0,0,.3);
@@ -90,7 +95,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   background: var(--bg);
   color: var(--ink);
   min-height: 100vh;
@@ -260,7 +265,7 @@ a { color: var(--accent); }
   gap: 10px;
   padding: 10px 14px;
   border: none;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   background: none;
   cursor: pointer;
   font-size: 13px;
@@ -276,7 +281,31 @@ a { color: var(--accent); }
 
 /* PAGES */
 .content { flex: 1; min-width: 0; }
-.page { padding: 32px 40px; max-width: 780px; }
+.page { padding: 40px 56px; max-width: 1140px; }
+
+@media (min-width: 1440px) {
+  .page { max-width: 1320px; padding: 48px 64px; }
+}
+
+/* FORM FIELDS */
+.select-field {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color .15s;
+}
+
+.select-field:hover { border-color: var(--accent); }
+
+.select-field option {
+  background: var(--surface);
+  color: var(--ink);
+}
 
 /* CARDS */
 .card {
@@ -296,7 +325,7 @@ a { color: var(--accent); }
   gap: 6px;
   min-height: 40px;
   padding: 9px 20px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-sm);
   border: 1px solid transparent;
   font-size: 13px;
   font-weight: 600;
@@ -690,7 +719,7 @@ a { color: var(--accent); }
 .filter-chip {
   font-size: 12px;
   padding: 6px 12px;
-  border-radius: 20px;
+  border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: var(--surface);
   cursor: pointer;

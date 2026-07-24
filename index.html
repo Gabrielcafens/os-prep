@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="light dark" />
   <title>OS Prep — Associate Reactive Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
   <script>
     (function () {
@@ -120,7 +123,7 @@
         <div>
           <label class="text-sm font-semibold" for="quiz-count">Número de questões</label>
           <div class="flex gap-8 mt-8">
-            <select id="quiz-count" x-model.number="quizCount" style="padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--white)">
+            <select id="quiz-count" class="select-field" x-model.number="quizCount">
               <option value="5">5 questões</option>
               <option value="10">10 questões</option>
               <option value="15">15 questões</option>
