@@ -26,6 +26,8 @@
 
 # OS Prep — Associate Reactive Developer O11
 
+🔗 **App no ar:** https://os-prep-indol.vercel.app/
+
 Aplicação de estudo para a certificação OutSystems Associate Reactive Developer.
 
 Front-end 100% estático (HTML + [Alpine.js](https://alpinejs.dev/) via CDN), sem build step — basta abrir o `index.html` ou publicar como está.
@@ -120,9 +122,16 @@ TOPICS.SECURITY
 
 ## Design & acessibilidade
 
-- Layout inspirado em sites de referência de API (sidebar fixa, tipografia mono para tags/badges, paleta neutra com azul de destaque)
+- Visual inspirado em Material Design 3 (cantos arredondados, botões em pílula, elevação tonal) sobre uma base de sidebar fixa + topbar, com tipografia mono para tags/badges
+- Topbar com avatar de perfil (placeholder "Visitante" — login real ainda não existe, ver Roadmap) mostrando o progresso geral e o toggle de tema
+- **Dark mode**: segue o tema do sistema por padrão, com toggle manual persistido em `localStorage` e sem flash de tela clara no carregamento
+- **Mobile**: a navegação lateral vira uma bottom tab bar fixa (estilo app nativo) abaixo de 700px
 - Cores semânticas (vermelho/âmbar/verde) mantidas apenas onde carregam informação real (badges de desempenho, timer)
-- Navegação e filtros usam `role="group"`/`aria-pressed`, resultado do simulado e explicações usam `aria-live`, flashcard é focável e vira com Enter/Espaço, e há um "pular para o conteúdo" no topo
+- Navegação e filtros usam `role="group"`/`aria-pressed`, resultado do simulado e explicações usam `aria-live`, flashcard é focável e vira com Enter/Espaço, `prefers-reduced-motion` é respeitado, e há um "pular para o conteúdo" no topo
+
+## Roadmap
+
+- [ ] Login/perfil real com dados persistentes entre dispositivos (provavelmente Supabase: auth + tabela de progresso por usuário)
 
 ## Notas
 

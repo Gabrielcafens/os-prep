@@ -51,10 +51,37 @@ function app() {
     // tracker
     topicStats: {},
 
+    // theme
+    theme: localStorage.getItem('os_theme') || 'system',
+
+    // profile menu
+    profileOpen: false,
+
     init() {
       this.initTracker();
       this.fcQuestions = shuffle([...FLASHCARDS]);
       this.fcDisplayed = this.fcQuestions[0] ?? null;
+      this.applyTheme();
+    },
+
+    // ─── THEME ─────────────────────────────────────────────────────────────
+    get isDarkMode() {
+      return this.theme === 'dark'
+        || (this.theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    },
+
+    applyTheme() {
+      if (this.theme === 'system') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', this.theme);
+      }
+    },
+
+    toggleTheme() {
+      this.theme = this.isDarkMode ? 'light' : 'dark';
+      localStorage.setItem('os_theme', this.theme);
+      this.applyTheme();
     },
 
     // ─── NAVIGATION ────────────────────────────────────────────────────────

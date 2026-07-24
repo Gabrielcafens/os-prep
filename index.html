@@ -3,31 +3,82 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light dark" />
   <title>OS Prep — Associate Reactive Developer</title>
   <link rel="stylesheet" href="css/style.css" />
+  <script>
+    (function () {
+      var saved = localStorage.getItem('os_theme');
+      if (saved === 'dark' || saved === 'light') {
+        document.documentElement.setAttribute('data-theme', saved);
+      }
+    })();
+  </script>
 </head>
 <body x-data="app()" x-init="init()" x-cloak>
 
 <a class="skip-link" href="#main">Pular para o conteúdo</a>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <span class="nav-logo">🐙 OS Prep</span>
-  <nav class="nav-tabs" aria-label="Seções do app">
-    <button class="nav-tab" :class="{active: page === 'quiz'}" :aria-current="page === 'quiz' ? 'page' : null" @click="showPage('quiz')">
-      <span aria-hidden="true">📝</span> Simulado
+<!-- TOPBAR -->
+<header class="topbar">
+  <span class="topbar-logo">🐙 OS Prep</span>
+
+  <div class="profile" @keydown.escape="profileOpen = false" @click.outside="profileOpen = false">
+    <button
+      class="profile-btn"
+      @click="profileOpen = !profileOpen"
+      :aria-expanded="profileOpen"
+      aria-haspopup="true"
+      aria-controls="profile-menu"
+      aria-label="Perfil e configurações"
+    >
+      <span class="avatar" aria-hidden="true">V</span>
     </button>
-    <button class="nav-tab" :class="{active: page === 'flashcards'}" :aria-current="page === 'flashcards' ? 'page' : null" @click="showPage('flashcards')">
-      <span aria-hidden="true">🃏</span> Flashcards
-    </button>
-    <button class="nav-tab" :class="{active: page === 'rules'}" :aria-current="page === 'rules' ? 'page' : null" @click="showPage('rules')">
-      <span aria-hidden="true">📖</span> Regras
-    </button>
-    <button class="nav-tab" :class="{active: page === 'tracker'}" :aria-current="page === 'tracker' ? 'page' : null" @click="showPage('tracker')">
-      <span aria-hidden="true">📊</span> Progresso
-    </button>
-  </nav>
-</aside>
+
+    <div class="profile-menu" id="profile-menu" x-show="profileOpen" x-transition role="menu">
+      <div class="profile-menu-header">
+        <span class="avatar avatar-lg" aria-hidden="true">V</span>
+        <div>
+          <p class="font-semibold text-sm">Visitante</p>
+          <p class="text-xs text-muted">Login chega em breve</p>
+        </div>
+      </div>
+
+      <div class="profile-menu-stat">
+        <span class="text-xs text-muted">Progresso geral</span>
+        <span class="font-semibold text-sm" x-text="`${overallStats.pct}%`"></span>
+      </div>
+
+      <button class="profile-menu-item" role="menuitem" @click="showPage('tracker'); profileOpen = false">
+        <span aria-hidden="true">📊</span> Ver progresso
+      </button>
+
+      <button class="profile-menu-item" role="menuitem" @click="toggleTheme()">
+        <span aria-hidden="true" x-text="isDarkMode ? '🌙' : '☀️'"></span>
+        <span x-text="isDarkMode ? 'Tema escuro' : 'Tema claro'"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <nav class="nav-tabs" aria-label="Seções do app">
+      <button class="nav-tab" :class="{active: page === 'quiz'}" :aria-current="page === 'quiz' ? 'page' : null" @click="showPage('quiz')">
+        <span aria-hidden="true">📝</span> Simulado
+      </button>
+      <button class="nav-tab" :class="{active: page === 'flashcards'}" :aria-current="page === 'flashcards' ? 'page' : null" @click="showPage('flashcards')">
+        <span aria-hidden="true">🃏</span> Flashcards
+      </button>
+      <button class="nav-tab" :class="{active: page === 'rules'}" :aria-current="page === 'rules' ? 'page' : null" @click="showPage('rules')">
+        <span aria-hidden="true">📖</span> Regras
+      </button>
+      <button class="nav-tab" :class="{active: page === 'tracker'}" :aria-current="page === 'tracker' ? 'page' : null" @click="showPage('tracker')">
+        <span aria-hidden="true">📊</span> Progresso
+      </button>
+    </nav>
+  </aside>
 
 <main class="content" id="main">
 
@@ -282,6 +333,7 @@
 </div>
 
 </main>
+</div>
 
 <script src="data/questions.js"></script>
 <script src="js/app.js"></script>
