@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OS Prep — Associate Reactive Developer</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body x-data="app()" x-init="init()" x-cloak>
+
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <span class="nav-logo">🐙 OS Prep</span>
+  <nav class="nav-tabs" aria-label="Seções do app">
+    <button class="nav-tab" :class="{active: page === 'quiz'}" :aria-current="page === 'quiz' ? 'page' : null" @click="showPage('quiz')">
+      <span aria-hidden="true">📝</span> Simulado
+    </button>
+    <button class="nav-tab" :class="{active: page === 'flashcards'}" :aria-current="page === 'flashcards' ? 'page' : null" @click="showPage('flashcards')">
+      <span aria-hidden="true">🃏</span> Flashcards
+    </button>
+    <button class="nav-tab" :class="{active: page === 'rules'}" :aria-current="page === 'rules' ? 'page' : null" @click="showPage('rules')">
+      <span aria-hidden="true">📖</span> Regras
+    </button>
+    <button class="nav-tab" :class="{active: page === 'tracker'}" :aria-current="page === 'tracker' ? 'page' : null" @click="showPage('tracker')">
+      <span aria-hidden="true">📊</span> Progresso
+    </button>
+  </nav>
+</aside>
+
+<main class="content" id="main">
+
+<!-- ═══ SIMULADO ══════════════════════════════════════════════════════════ -->
+<div class="page" x-show="page === 'quiz'">
+
+  <!-- SETUP -->
+  <div x-show="quizScreen === 'setup'">
+    <p class="page-title">Simulado</p>
+    <p class="page-subtitle">Escolha o modo e os tópicos para começar.</p>
+
+    <div class="mode-cards" role="group" aria-label="Modo do simulado">
+      <button class="mode-card" :class="{selected: mode === 'practice'}" :aria-pressed="mode === 'practice'" @click="mode = 'practice'">
+        <div class="mode-icon" aria-hidden="true">📚</div>
+        <div class="mode-name">Modo Prática</div>
+        <div class="mode-desc">Gabarito e explicação logo após cada resposta. Sem tempo.</div>
+      </button>
+      <button class="mode-card" :class="{selected: mode === 'exam'}" :aria-pressed="mode === 'exam'" @click="mode = 'exam'">
+        <div class="mode-icon" aria-hidden="true">⏱️</div>
+        <div class="mode-name">Modo Exame</div>
+        <div class="mode-desc">Cronômetro de 1h30. Gabarito só no final. Simula a prova real.</div>
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="flex-between mb-8">
+        <span class="text-sm font-semibold">Filtrar por tópico</span>
+      </div>
+      <div class="topic-filter" role="group" aria-label="Filtrar simulado por tópico">
+        <button class="filter-chip" :class="{active: quizTopicFilter === 'all'}" :aria-pressed="quizTopicFilter === 'all'" @click="quizTopicFilter = 'all'">Todos</button>
+        <template x-for="t in topics" :key="t">
+          <button class="filter-chip" :class="{active: quizTopicFilter === t}" :aria-pressed="quizTopicFilter === t" @click="quizTopicFilter = t" x-text="t"></button>
+        </template>
+      </div>
+
+      <hr />
+
+      <div class="flex-between" style="flex-wrap:wrap; gap:10px;">
+        <div>
+          <label class="text-sm font-semibold" for="quiz-count">Número de questões</label>
+          <div class="flex gap-8 mt-8">
+            <select id="quiz-count" x-model.number="quizCount" style="padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:var(--white)">
+              <option value="5">5 questões</option>
+              <option value="10">10 questões</option>
+              <option value="15">15 questões</option>
+              <option value="20">20 questões</option>
+              <option value="50">Todas (50)</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primary" @click="startQuiz()">Iniciar simulado →</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="text-sm font-semibold mb-8">Seus pontos críticos</p>
+      <div class="flex" style="flex-wrap:wrap;gap:6px;">
+        <span class="badge badge-red">0% · Client e Server Actions</span>
+        <span class="badge badge-red">0% · Fluxos Lógicos</span>
+        <span class="badge badge-red">0% · Usando Blocos</span>
+        <span class="badge badge-red">0% · Eventos de Blocos</span>
+        <span class="badge badge-amber">33% · Entidades</span>
+        <span class="badge badge-amber">33% · Validações</span>
+        <span class="badge badge-amber">66% · Aggregates</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUESTION -->
+  <div x-show="quizScreen === 'question' && currentQuestion">
+    <div class="quiz-header">
+      <div>
+        <span class="timer" :class="timerClass" x-show="mode === 'exam'" x-text="timerText" role="timer" aria-live="off"></span>
+      </div>
+      <span class="quiz-meta" x-text="`${currentQ + 1} / ${quizQuestions.length}`"></span>
+    </div>
+
+    <div class="card">
+      <span class="topic-tag" x-text="currentQuestion?.topic"></span>
+      <p class="question-text" x-text="currentQuestion?.question"></p>
+      <div class="options" role="radiogroup" :aria-label="currentQuestion?.question">
+        <template x-for="(opt, i) in currentQuestion?.options ?? []" :key="i">
+          <button
+            class="option"
+            role="radio"
+            :aria-checked="answered && i === selectedIndex"
+            :class="{correct: answered && i === currentQuestion.answer, wrong: answered && i === selectedIndex && i !== currentQuestion.answer}"
+            :disabled="answered"
+            @click="selectOption(i)"
+          >
+            <span class="option-letter" x-text="letters[i]"></span>
+            <span x-text="opt"></span>
+            <span class="sr-only" x-show="answered && i === currentQuestion.answer" x-text="' (resposta correta)'"></span>
+            <span class="sr-only" x-show="answered && i === selectedIndex && i !== currentQuestion.answer" x-text="' (sua resposta, incorreta)'"></span>
+          </button>
+        </template>
+      </div>
+      <div class="explanation" :class="{show: answered && mode === 'practice'}" x-text="currentQuestion?.explanation" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="quiz-actions">
+      <button class="btn btn-ghost" @click="quizScreen = 'setup'">← Voltar</button>
+      <button class="btn btn-primary" :disabled="!answered" @click="nextQuestion()">
+        Próxima →
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div x-show="quizScreen === 'result'" role="status" aria-live="polite">
+    <div class="card text-center">
+      <div class="result-circle" :class="resultPass ? 'pass' : 'fail'">
+        <span x-text="`${resultPct}%`"></span>
+        <span class="result-label" x-text="resultPass ? 'Aprovado' : 'Reprovado'"></span>
+      </div>
+      <p class="font-semibold" x-text="`${score} de ${quizQuestions.length} corretas`"></p>
+      <p class="text-sm text-muted mt-8">Tempo: <span x-text="formatTime(elapsed)"></span></p>
+    </div>
+
+    <div class="card">
+      <p class="text-sm font-semibold mb-8">Erros por tópico</p>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-mid)">
+        <template x-if="wrongEntries.length === 0">
+          <li>Nenhum erro! 🎉</li>
+        </template>
+        <template x-for="[topic, count] in wrongEntries" :key="topic">
+          <li><strong x-text="topic + ':'"></strong> <span x-text="`${count} erro${count > 1 ? 's' : ''}`"></span></li>
+        </template>
+      </ul>
+    </div>
+
+    <div class="flex gap-8 mt-8" style="flex-wrap:wrap;">
+      <button class="btn btn-primary" @click="startQuiz()">Refazer simulado</button>
+      <button class="btn btn-secondary" @click="quizScreen = 'setup'">Novo simulado</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FLASHCARDS ════════════════════════════════════════════════════════ -->
+<div class="page" x-show="page === 'flashcards'">
+  <p class="page-title">Flashcards</p>
+  <p class="page-subtitle">Clique no card para revelar a resposta.</p>
+
+  <div class="topic-filter" role="group" aria-label="Filtrar flashcards por tópico">
+    <button class="filter-chip" :class="{active: fcTopicFilter === 'all'}" :aria-pressed="fcTopicFilter === 'all'" @click="setFcTopic('all')">Todos</button>
+    <template x-for="t in topics" :key="t">
+      <button class="filter-chip" :class="{active: fcTopicFilter === t}" :aria-pressed="fcTopicFilter === t" @click="setFcTopic(t)" x-text="t"></button>
+    </template>
+  </div>
+
+  <div class="flashcard-wrap">
+    <div
+      class="flashcard"
+      :class="{flipped: fcFlipped}"
+      role="button"
+      tabindex="0"
+      :aria-pressed="fcFlipped"
+      :aria-label="fcFlipped ? 'Card virado, mostrando a resposta. Ativar para voltar à pergunta.' : 'Card mostrando a pergunta. Ativar para revelar a resposta.'"
+      @click="flipCard()"
+      @keydown.enter.prevent="flipCard()"
+      @keydown.space.prevent="flipCard()"
+    >
+      <div class="flashcard-face flashcard-front">
+        <span class="card-label" x-text="fcDisplayed?.topic"></span>
+        <p class="card-q" x-text="fcDisplayed ? fcDisplayed.front : 'Nenhum flashcard neste tópico.'"></p>
+      </div>
+      <div class="flashcard-face flashcard-back">
+        <p class="card-a" x-text="fcDisplayed?.back"></p>
+      </div>
+    </div>
+  </div>
+
+  <p class="flashcard-hint text-muted">Clique para virar · navegue com as setas</p>
+
+  <div class="fc-nav">
+    <button class="btn btn-secondary" @click="fcPrev()">← Anterior</button>
+    <span class="fc-counter" x-text="fcQuestions.length ? `${fcIndex + 1} / ${fcQuestions.length}` : '0 / 0'"></span>
+    <button class="btn btn-secondary" @click="fcNext()">Próximo →</button>
+  </div>
+
+  <div class="flex-center mt-16">
+    <button class="btn btn-ghost" @click="shuffleFC()">🔀 Embaralhar</button>
+  </div>
+</div>
+
+<!-- ═══ REGRAS ════════════════════════════════════════════════════════════ -->
+<div class="page" x-show="page === 'rules'">
+  <p class="page-title">Regras de ouro</p>
+  <p class="page-subtitle">Conceitos essenciais para a prova. Fonte: documentação oficial OutSystems.</p>
+
+  <div class="topic-filter" role="group" aria-label="Filtrar regras por tópico">
+    <button class="filter-chip" :class="{active: rulesTopicFilter === 'all'}" :aria-pressed="rulesTopicFilter === 'all'" @click="rulesTopicFilter = 'all'">Todos</button>
+    <template x-for="t in topics" :key="t">
+      <button class="filter-chip" :class="{active: rulesTopicFilter === t}" :aria-pressed="rulesTopicFilter === t" @click="rulesTopicFilter = t" x-text="t"></button>
+    </template>
+  </div>
+
+  <div class="mt-16">
+    <template x-for="r in filteredRules" :key="r.topic">
+      <details class="rules-topic">
+        <summary>
+          <span x-text="r.topic"></span>
+          <span class="text-xs text-muted" x-text="`${r.rules.length} regras`"></span>
+        </summary>
+        <div class="rules-body">
+          <ul>
+            <template x-for="(rule, i) in r.rules" :key="i">
+              <li x-text="rule"></li>
+            </template>
+          </ul>
+        </div>
+      </details>
+    </template>
+  </div>
+</div>
+
+<!-- ═══ PROGRESSO ════════════════════════════════════════════════════════ -->
+<div class="page" x-show="page === 'tracker'">
+  <div class="flex-between mb-8" style="flex-wrap:wrap;gap:8px;">
+    <div>
+      <p class="page-title">Seu progresso</p>
+      <p class="page-subtitle" x-text="`${overallStats.pct}% geral (${overallStats.totalCorrect}/${overallStats.totalDone} questões)`"></p>
+    </div>
+    <button class="btn btn-ghost text-xs" @click="resetStats()">Resetar progresso</button>
+  </div>
+
+  <div class="tracker-grid">
+    <template x-for="[topic, data] in Object.entries(topicStats)" :key="topic">
+      <div class="tracker-item">
+        <div class="label">
+          <span x-text="topic"></span>
+          <span class="badge" :class="`badge-${trackerBadgeClass(data.examScore)}`" x-text="`${data.examScore}%`"></span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" :class="trackerColor(data.examScore)" :style="`width: ${appPct(data) ?? data.examScore}%`"></div>
+        </div>
+        <div class="tracker-stats">
+          <span x-text="data.label"></span>
+          <span x-text="data.done ? `App: ${appPct(data)}%` : 'Sem questões ainda'"></span>
+        </div>
+      </div>
+    </template>
+  </div>
+
+  <div class="card mt-16">
+    <p class="text-sm font-semibold mb-8">Legenda</p>
+    <div class="flex" style="flex-wrap:wrap;gap:8px;">
+      <span class="badge badge-red">% da prova real</span>
+      <span class="text-xs text-muted">A barra azul mostra seu desempenho no app.</span>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script src="data/questions.js"></script>
+<script src="js/app.js"></script>
+<script defer src="https://unpkg.com/alpinejs@3.14.9/dist/cdn.min.js"></script>
+</body>
+</html>
