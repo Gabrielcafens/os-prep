@@ -159,6 +159,7 @@ function app() {
 
     // ─── TIMER ─────────────────────────────────────────────────────────────
     startTimer() {
+      this.stopTimer();
       this.elapsed = 0;
       this.timerInterval = setInterval(() => {
         this.elapsed++;
